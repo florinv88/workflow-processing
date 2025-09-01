@@ -20,19 +20,12 @@ public class LoggingInterceptor implements ClientHttpRequestInterceptor {
 
     public ClientHttpResponse intercept(HttpRequest request, byte[] body,ClientHttpRequestExecution execution) throws IOException {
         logRequest(request, body);
-        ClientHttpResponse response = execution.execute(request, body);
-        logResponse(response);
-        return response;
+        return execution.execute(request,body);
     }
 
     private void logRequest(HttpRequest request, byte[] body) {
         var bodyAsString = new String(body, UTF_8);
         log.info("{} [{}]", request.getURI(), request.getMethod());
         log.info("request : {}", bodyAsString);
-    }
-
-    private void logResponse(ClientHttpResponse response) throws IOException {
-        var bodyAsString = copyToString(response.getBody(), defaultCharset());
-        log.info("{} [{}]", response.getStatusText(), response.getStatusCode());
     }
 }
